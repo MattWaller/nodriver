@@ -39,6 +39,8 @@ class Config:
         browser_args: Optional[List[str]] = AUTO,
         sandbox: Optional[bool] = True,
         lang: Optional[str] = "en-US",
+        host:Optional[str]="127.0.0.1",
+        port:Optional[int]=None,
         **kwargs: dict,
     ):
         """
@@ -60,13 +62,14 @@ class Config:
         :param autodiscover_targets: use autodiscovery of targets
         :param lang: language string to use other than the default "en-US,en;q=0.9"
         :param kwargs:
-
         :type user_data_dir: PathLike
         :type headless: bool
         :type browser_executable_path: PathLike
         :type browser_args: list[str]
         :type sandbox: bool
         :type lang: str
+        :type host: str
+        :type port: int
         :type kwargs: dict
         """
 
@@ -87,8 +90,8 @@ class Config:
         self.browser_executable_path = browser_executable_path
         self.headless = headless
         self.sandbox = sandbox
-        self.host = None
-        self.port = None
+        self.host = host
+        self.port = port
         self._extensions = []
         # when using posix-ish operating system and running as root
         # you must use no_sandbox = True, which in case is corrected here

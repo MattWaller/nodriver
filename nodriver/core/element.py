@@ -37,6 +37,322 @@ def create(node: cdp.dom.Node, tab: Tab, tree: typing.Optional[cdp.dom.Node] = N
 
     return elem
 
+def get_special_key_info(special_key):
+    """
+    Get the necessary information for sending keystrokes based on the given character.
+    :param char: The character to get the information for.
+    :return: A dictionary containing the following keys:
+        - special_key: The special_key itself.
+        - unmodified_text: ""
+        - code: The HTML key code.
+        - key: The key name.
+        - native_virtual_key_code: The native virtual key code.
+        - windows_virtual_key_code: The Windows virtual key code.
+    """
+
+    # Mapping of special characters to their corresponding key codes
+    special_codes = {
+        "ENTER": [{
+            "text": "",
+            "unmodified_text": "",
+            "code": "Enter",
+            "key": "Enter",
+            "native_virtual_key_code": 13,
+            "windows_virtual_key_code": 13,
+        }],
+        "DELETE": [{
+            "text": "",
+            "unmodified_text": "",
+            "code": "Delete",
+            "key": "Delete",
+            "native_virtual_key_code": 46,
+            "windows_virtual_key_code": 46,
+        }],
+        "BACKSPACE": [{
+            "text": "",
+            "unmodified_text": "",
+            "code": "Backspace",
+            "key": "Backspace",
+            "native_virtual_key_code": 8,
+            "windows_virtual_key_code": 8,
+        }],        
+        "TAB": [{
+            "text": "",
+            "unmodified_text": "",
+            "code": "Tab",
+            "key": "Tab",
+            "native_virtual_key_code": 9,
+            "windows_virtual_key_code": 9,
+        }],        
+        "CLEAR": [
+            {
+                "text": "",
+                "unmodified_text": "",
+                "code": "Control",
+                "key": "Control",
+                "native_virtual_key_code": 17,
+                "windows_virtual_key_code": 17,
+            },
+            {
+                "text": "a",
+                "unmodified_text": "a",
+                "code": "KeyA",
+                "key": "a",
+                "native_virtual_key_code": 65,
+                "windows_virtual_key_code": 65,
+            },
+            {
+                "text": "",
+                "unmodified_text": "",
+                "code": "Backspace",
+                "key": "Backspace",
+                "native_virtual_key_code": 8,
+                "windows_virtual_key_code": 8,
+            }
+        ]
+
+    }
+
+    if special_key in special_codes:
+        return special_codes[special_key]
+    # else:
+    #     return {
+    #         "text": char,
+    #         "unmodified_text": char,
+    #         "code": f"Unicode{ord(char):04X}",
+    #         "key": f"u{ord(char):04X}",
+    #         "native_virtual_key_code": ord(char),
+    #         "windows_virtual_key_code": ord(char),
+    #     }
+def get_key_info(char):
+    """
+    Get the necessary information for sending keystrokes based on the given character.
+    :param char: The character to get the information for.
+    :return: A dictionary containing the following keys:
+        - text: The character itself.
+        - unmodified_text: The character itself.
+        - code: The HTML key code.
+        - key: The key name.
+        - native_virtual_key_code: The native virtual key code.
+        - windows_virtual_key_code: The Windows virtual key code.
+    """
+    if len(char) != 1:
+        raise ValueError("Input must be a single character")
+
+    # Mapping of characters to their corresponding key codes
+    key_codes = {
+        char: {
+            "text": char,
+            "unmodified_text": char,
+            "code": f"Key{char.upper()}",
+            "key": char.lower(),
+            "native_virtual_key_code": ord(char),
+            "windows_virtual_key_code": ord(char.upper()),
+        }
+        for char in string.ascii_letters + string.digits + " "
+    }
+
+    # Mapping of punctuation characters to their corresponding key codes
+    punctuation_codes = {
+        "!": {
+            "text": "!",
+            "unmodified_text": "!",
+            "code": "Digit1",
+            "key": "!",
+            "native_virtual_key_code": 49,
+            "windows_virtual_key_code": 49,
+        },
+        "@": {
+            "text": "@",
+            "unmodified_text": "@",
+            "code": "Digit2",
+            "key": "@",
+            "native_virtual_key_code": 50,
+            "windows_virtual_key_code": 50,
+        },
+        "#" : {
+            "text": "#",
+            "unmodified_text": "#",
+            "code": "Digit3",
+            "key": "#",
+            "native_virtual_key_code": 51,
+            "windows_virtual_key_code": 51,        
+        },
+        "$" : {
+            "text": "$",
+            "unmodified_text": "$",
+            "code": "Digit4",
+            "key": "$",
+            "native_virtual_key_code": 52,
+            "windows_virtual_key_code": 52,        
+        },
+        "%" : {
+            "text": "%",
+            "unmodified_text": "%",
+            "code": "Digit5",
+            "key": "%",
+            "native_virtual_key_code": 53,
+            "windows_virtual_key_code": 53,        
+        },
+        "^" : {
+            "text": "^",
+            "unmodified_text": "^",
+            "code": "Digit6",
+            "key": "^",
+            "native_virtual_key_code": 54,
+            "windows_virtual_key_code": 54,        
+        },
+        "&" : {
+            "text": "&",
+            "unmodified_text": "&",
+            "code": "Digit7",
+            "key": "&",
+            "native_virtual_key_code": 55,
+            "windows_virtual_key_code": 55,        
+        },
+
+        "*" : {
+            "text": "*",
+            "unmodified_text": "*",
+            "code": "Digit8",
+            "key": "*",
+            "native_virtual_key_code": 56,
+            "windows_virtual_key_code": 56,        
+        },
+
+        "(" : {
+            "text": "(",
+            "unmodified_text": "(",
+            "code": "Digit9",
+            "key": "(",
+            "native_virtual_key_code": 57,
+            "windows_virtual_key_code": 57,        
+        },
+        ")" : {
+            "text": ")",
+            "unmodified_text": ")",
+            "code": "Digit0",
+            "key": ")",
+            "native_virtual_key_code": 57,
+            "windows_virtual_key_code": 57,        
+        },
+        "_" : {
+            "text": "_",
+            "unmodified_text": "_",
+            "code": "Minus",
+            "key": "_",
+            "native_virtual_key_code": 173,
+            "windows_virtual_key_code": 173,        
+        },
+
+        "+" : {
+            "text": "+",
+            "unmodified_text": "+",
+            "code": "Equal",
+            "key": "+",
+            "native_virtual_key_code": 61,
+            "windows_virtual_key_code": 61,            
+        },
+
+        "|" : {
+            "text": "|",
+            "unmodified_text": "|",
+            "code": "Backslash",
+            "key": "|",
+            "native_virtual_key_code": 220,
+            "windows_virtual_key_code": 220,            
+        },
+        
+        "}" : {
+            "text": "}",
+            "unmodified_text": "}",
+            "code": "BracketRight",
+            "key": "}",
+            "native_virtual_key_code": 221,
+            "windows_virtual_key_code": 221,            
+        },
+        "{" : {
+            "text": "{",
+            "unmodified_text": "{",
+            "code": "BracketLeft",
+            "key": "{",
+            "native_virtual_key_code": 219,
+            "windows_virtual_key_code": 219,            
+        },
+        "\"" : {
+            "text": "\"",
+            "unmodified_text": "\"",
+            "code": "Quote",
+            "key": "\"",
+            "native_virtual_key_code": 222,
+            "windows_virtual_key_code": 222,            
+        },
+        ":" : {
+            "text": ":",
+            "unmodified_text": ":",
+            "code": "Semicolon",
+            "key": ":",
+            "native_virtual_key_code": 59,
+            "windows_virtual_key_code": 59,            
+        },
+        ">" : {
+            "text": ">",
+            "unmodified_text": ">",
+            "code": "Period",
+            "key": ">",
+            "native_virtual_key_code": 190,
+            "windows_virtual_key_code": 190,            
+        },
+        "<" : {
+            "text": "<",
+            "unmodified_text": "<",
+            "code": "Comma",
+            "key": "<",
+            "native_virtual_key_code": 188,
+            "windows_virtual_key_code": 188,            
+        },
+
+        "?" : {
+            "text": "?",
+            "unmodified_text": "?",
+            "code": "Slash",
+            "key": "?",
+            "native_virtual_key_code": 191,
+            "windows_virtual_key_code": 191,            
+        },
+        "~" : {
+            "text": "~",
+            "unmodified_text": "~",
+            "code": "Backquote",
+            "key": "~",
+            "native_virtual_key_code": 192,
+            "windows_virtual_key_code": 192,            
+        },
+        "." : {
+            "text": ".",
+            "unmodified_text": ".",
+            "code": "Period",
+            "key": ".",
+            "native_virtual_key_code": 190,
+            "windows_virtual_key_code": 190,            
+        },
+
+    }
+
+    if char in key_codes:
+        return key_codes[char]
+    elif char in punctuation_codes:
+        return punctuation_codes[char]
+    else:
+        return {
+            "text": char,
+            "unmodified_text": char,
+            "code": f"Unicode{ord(char):04X}",
+            "key": f"u{ord(char):04X}",
+            "native_virtual_key_code": ord(char),
+            "windows_virtual_key_code": ord(char),
+        }
+
 
 class Element:
     def __init__(self, node: cdp.dom.Node, tab: Tab, tree: cdp.dom.Node = None):
@@ -592,21 +908,42 @@ class Element:
         """clears an input field"""
         return await self.apply('function (element) { element.value = "" } ')
 
+    # async def send_keys(self, text: str):
+    #     """
+    #     send text to an input field, or any other html element.
+
+    #     hint, if you ever get stuck where using py:meth:`~click`
+    #     does not work, sending the keystroke \\n or \\r\\n or a spacebar work wonders!
+
+    #     :param text: text to send
+    #     :return: None
+    #     """
+    #     await self.apply("(elem) => elem.focus()")
+    #     [
+    #         await self._tab.send(cdp.input_.dispatch_key_event("char", text=char))
+    #         for char in list(text)
+    #     ]
+
     async def send_keys(self, text: str):
         """
-        send text to an input field, or any other html element.
+        Send text to an input field, or any other HTML element.
 
-        hint, if you ever get stuck where using py:meth:`~click`
-        does not work, sending the keystroke \\n or \\r\\n or a spacebar work wonders!
+        Hint: If you ever get stuck where using `py:meth:`~click`
+        does not work, sending the keystroke `\n` or `\r\n` or a spacebar work wonders!
 
-        :param text: text to send
+        :param text: Text to send
         :return: None
         """
         await self.apply("(elem) => elem.focus()")
-        [
-            await self._tab.send(cdp.input_.dispatch_key_event("char", text=char))
-            for char in list(text)
-        ]
+
+        for char in list(text):
+            key_info = get_key_info(char)
+            print(f'got key info: {key_info} for char: {char}')
+            
+            await self._tab.send(cdp.input_.dispatch_key_event("rawKeyDown",**key_info))
+            await self._tab.send(cdp.input_.dispatch_key_event("char", **key_info))
+
+
 
     async def send_file(self, *file_paths: PathLike):
         """
