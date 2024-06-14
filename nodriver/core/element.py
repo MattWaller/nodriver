@@ -125,6 +125,7 @@ def get_special_key_info(special_key):
     #         "windows_virtual_key_code": ord(char),
     #     }
 def get_key_info(char):
+    import string
     """
     Get the necessary information for sending keystrokes based on the given character.
     :param char: The character to get the information for.
